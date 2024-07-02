@@ -12,8 +12,8 @@
 
         // 2. 해당 휴대폰번호로 인증번호API 요청하기
         axios
-          .post('http://localhost:3000/tokens/phone', {
-            qqq: myphone,
+          .post('http://localhost:3000/phone', {
+            phone: myphone,
           })
           .then((res) => {
             console.log(res);

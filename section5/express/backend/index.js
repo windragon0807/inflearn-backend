@@ -2,41 +2,67 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import cors from "cors";
+import "dotenv/config";
 
 import { options } from "./swagger/config.js";
+import { checkPhone, getToken, sendTokenToSMS } from "./src/phone.js";
+import { checkEmail, getWelcomeTemplate, sendTemplateToEmail } from "./src/email.js";
 
-const app = express();
+const server = express();
 
-// express 프레임워크는 기본적으로 json 형태를 지원하고 있지 않으므로 추가
-app.use(express.json());
-// Swagger UI
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)));
-app.use(cors());
+/* express 프레임워크는 기본적으로 json 형태를 지원하고 있지 않으므로 추가 */
+server.use(express.json());
+/* Swagger UI */
+server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)));
+server.use(cors());
 
-app.get("/boards", (req, res) => {
-  // 1. 데이터를 조회하는 로직 => DB에 접속해서 데이터 꺼내오기
-  const result = [
-    { number: 1, writer: "철수", title: "제목입니다~~", contents: "내용이에요!!!" },
-    { number: 2, writer: "영희", title: "영희입니다~~", contents: "영희이에요!!!" },
-    { number: 3, writer: "훈이", title: "훈이입니다~~", contents: "훈이이에요!!!" },
-  ];
+/**
+ * 문자 메시지 전송하기
+ */
+server.post("/phone", async (req, res) => {
+  const phone = req.body.phone;
 
-  // 2. 꺼내온 결과 응답 주기
-  res.send(result);
+  const isValid = checkPhone(phone);
+  if (isValid === false) {
+    res.status(400).json({ message: "유효하지 않은 핸드폰 번호입니다." });
+    return;
+  }
+
+  const token = getToken();
+
+  const isSuccess = await sendTokenToSMS(phone, token);
+  if (isSuccess === false) {
+    res.status(500).json({ message: "문자 전송에 실패했습니다." });
+    return;
+  }
+  res.status(200).json({ message: "문자 전송에 성공했습니다." });
 });
 
-app.post("/boards", (req, res) => {
-  // 1. 브라우저에서 보내준 데이터 확인하기
-  console.log(req);
-  console.log("=========================");
-  console.log(req.body); // 추가
+/**
+ * 이메일 보내기
+ */
+server.post("/email", async (req, res) => {
+  const { name, age, school, email } = req.body;
 
-  // 2. DB에 접속 후, 데이터를 저장 => 데이터 저장했다고 가정
+  // 1. 이메일이 정상인지 확인(1-존재여부, 2-"@"포함여부)
+  const isValid = checkEmail(email);
+  if (isValid === false) return;
 
-  // 3. DB에 저장된 결과를 브라우저에 응답(response) 주기
-  res.send("게시물 등록에 성공하였습니다.");
+  // 2. 가입환영 템플릿 만들기
+  const myTemplate = getWelcomeTemplate({ name, age, school });
+
+  // 3. 이메일에 가입환영 템플릿 전송하기
+  const isSuccess = await sendTemplateToEmail(email, myTemplate);
+  if (isSuccess === false) {
+    res.status(500).json({ message: "이메일 전송에 실패했습니다." });
+    return;
+  }
+  res.status(200).json({ message: "이메일 전송에 성공했습니다." });
 });
 
-app.listen(3000, () => {
-  console.log("백엔드 API 서버가 켜졌어요!!!");
+/**
+ * 서버 시작
+ */
+server.listen(3_000, () => {
+  console.log("Server is running on port 3000");
 });
