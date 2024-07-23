@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true, // 데코레이터 추가하기,
+    "noImplicitAny": false
+  },
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}
