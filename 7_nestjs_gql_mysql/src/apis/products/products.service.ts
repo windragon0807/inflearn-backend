@@ -67,4 +67,32 @@ export class ProductsService {
       // );
     }
   }
+
+  async delete({ productId }: { productId: string }): Promise<boolean> {
+    /*
+     * 1. 실제 삭제
+     * this.products Repository.delete({ id: productId });
+     */
+    /*
+     * 2. 소프트 삭제 (직접 구현) - isDeleted
+     * this.productsRepository.update({ id: productId }, { isDeleted: true });
+     */
+    /*
+     * 3. 소프트 삭제 (직접 구현) - deletedAt
+     * this.productsRepository.update({ id: productId }, { deletedAt: new Date() });
+     */
+    /*
+     * 4. 소프트 삭제 (TypeORM 제공) - softRemove()
+     * 장점 : 여러 `id`를 한 번에 삭제 가능 ex. softRemove([{ id: 1 }, { id: 2 }, { id: 3 }]);
+     * 단점 : `id`로만 삭제 가능
+     * this.productsRepository.softRemove({ id: productId });
+     */
+    /*
+     * 5. 소프트 삭제 (TypeORM 제공) - softDelete()
+     * 장점: 다른 컬럼으로도 삭제 가능
+     * 단점: 여러 `id`를 한 번에 삭제 불가능
+     */
+    const result = await this.productsRepository.softDelete({ id: productId });
+    return result.affected ? true : false;
+  }
 }
