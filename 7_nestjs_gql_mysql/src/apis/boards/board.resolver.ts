@@ -1,16 +1,16 @@
 import { Query, Resolver, Mutation, Args } from '@nestjs/graphql';
 
-import { BoardsService } from './boards.service';
+import { BoardService } from './board.service';
 import { CreateBoardInput } from './dto/create-board.input';
 import { Board } from './entities/board.entity';
 
 @Resolver()
-export class BoardsResolver {
-  constructor(private readonly boardsService: BoardsService) {}
+export class BoardResolver {
+  constructor(private readonly boardService: BoardService) {}
 
   @Query(() => [Board], { nullable: true })
   fetchBoards(): Board[] {
-    return this.boardsService.findAll();
+    return this.boardService.findAll();
   }
 
   @Mutation(() => String)
@@ -20,6 +20,6 @@ export class BoardsResolver {
     // @Args('contents') contents: string,
     @Args('createBoardInput') createBoardInput: CreateBoardInput,
   ): string {
-    return this.boardsService.create({ createBoardInput });
+    return this.boardService.create({ createBoardInput });
   }
 }

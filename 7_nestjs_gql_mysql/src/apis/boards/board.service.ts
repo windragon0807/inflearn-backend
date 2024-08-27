@@ -10,7 +10,7 @@ import { CreateBoardInput } from './dto/create-board.input';
  * Scope.TRANSIENT : 매번 새로운 인스턴스 생성
  */
 @Injectable()
-export class BoardsService {
+export class BoardService {
   findAll(): Board[] {
     // 1. 데이터를 조회하는 로직 => DB에 접속해서 데이터 꺼내오기
     const result = [
