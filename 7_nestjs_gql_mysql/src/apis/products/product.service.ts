@@ -6,6 +6,7 @@ import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { ProductSaleslocationService } from '../productsSaleslocations/productSaleslocation.service';
+import { ProductTagService } from '../productsTags/productTag.service';
 
 @Injectable()
 export class ProductService {
@@ -13,6 +14,7 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly productSaleslocationService: ProductSaleslocationService,
+    private readonly productTagService: ProductTagService,
   ) {}
 
   findAll(): Promise<Product[]> {
@@ -33,14 +35,31 @@ export class ProductService {
   }: {
     createProductInput: CreateProductInput;
   }): Promise<Product> {
-    const { productSaleslocation, productCategoryId, ...product } =
+    const { productSaleslocation, productCategoryId, productTags, ...product } =
       createProductInput;
 
-    // productsSaleslocation 레포지토리에 직접 접근하지 않고 서비스를 타고 가져오는 이뉴는 검증을 서비스에서 진행하기 떄문입니다.
+    /**
+     * 상품거래 위치 등록
+     */
+    /* productsSaleslocation 레포지토리에 직접 접근하지 않고 서비스를 타고 가져오는 이유는 검증을 서비스에서 진행하기 떄문입니다. */
     const productSaleslocationResult =
       await this.productSaleslocationService.create({
         ...productSaleslocation,
       });
+
+    /**
+     * 상품태그 등록
+     */
+    /* productTags가 ["#전자제품", "#영등포", "#컴퓨터"]와 같은 패턴으로 가정 */
+    const tagNames = productTags.map((el) => el.replace('#', ''));
+    const prevTags = await this.productTagService.findByNames({ tagNames });
+    const temp = [];
+    tagNames.forEach((el) => {
+      const isExist = prevTags.find((prevEl) => el === prevEl.name);
+      if (!isExist) temp.push({ name: el });
+    });
+    const newTags = await this.productTagService.bulkInsert({ names: temp });
+    const tags = [...prevTags, ...newTags.identifiers];
 
     const productsResult = await this.productRepository.save({
       ...product,
@@ -48,6 +67,7 @@ export class ProductService {
       productCategory: {
         id: productCategoryId,
       },
+      productTags: tags,
     });
 
     return productsResult;
@@ -73,6 +93,7 @@ export class ProductService {
     return this.productRepository.save({
       ...product, // 수정 후 수정되지 않은 다른 결과값까지 모두 받고 싶을 때 사용
       ...updateProductInput,
+      productTags: updateProductInput.productTags.map((el) => ({ name: el })),
     });
 
     // this.productRepository.create() // DB 접속이랑 관련 없음. 등록을 위해서 빈 껍데기 객체 만들기 위함

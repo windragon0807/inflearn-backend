@@ -6,18 +6,22 @@ import { ProductResolver } from './product.resolver';
 import { ProductService } from './product.service';
 import { ProductSaleslocation } from '../productsSaleslocations/entities/productSaleslocation.entity';
 import { ProductSaleslocationService } from '../productsSaleslocations/productSaleslocation.service';
+import { ProductTagService } from '../productsTags/productTag.service';
+import { ProductTag } from '../productsTags/entities/productTag.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Product, //
       ProductSaleslocation,
+      ProductTag,
     ]),
   ],
   providers: [
     ProductResolver, //
     ProductService,
     ProductSaleslocationService,
+    ProductTagService,
   ],
 })
 export class ProductModule {}
