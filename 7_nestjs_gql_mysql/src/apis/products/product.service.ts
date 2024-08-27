@@ -17,14 +17,14 @@ export class ProductService {
 
   findAll(): Promise<Product[]> {
     return this.productRepository.find({
-      relations: ['productSaleslocation'],
+      relations: ['productSaleslocation', 'productCategory'],
     });
   }
 
   findOne({ productId }: { productId: string }): Promise<Product> {
     return this.productRepository.findOne({
       where: { id: productId },
-      relations: ['productSaleslocation'],
+      relations: ['productSaleslocation', 'productCategory'],
     });
   }
 
@@ -33,7 +33,8 @@ export class ProductService {
   }: {
     createProductInput: CreateProductInput;
   }): Promise<Product> {
-    const { productSaleslocation, ...product } = createProductInput;
+    const { productSaleslocation, productCategoryId, ...product } =
+      createProductInput;
 
     // productsSaleslocation 레포지토리에 직접 접근하지 않고 서비스를 타고 가져오는 이뉴는 검증을 서비스에서 진행하기 떄문입니다.
     const productSaleslocationResult =
@@ -44,6 +45,9 @@ export class ProductService {
     const productsResult = await this.productRepository.save({
       ...product,
       productSaleslocation: productSaleslocationResult,
+      productCategory: {
+        id: productCategoryId,
+      },
     });
 
     return productsResult;
