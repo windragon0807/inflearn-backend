@@ -1,12 +1,12 @@
 import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
 
 import { User } from './entities/user.entity';
-import { UsersService } from './user.service';
+import { UserService } from './user.service';
 
 @Resolver()
-export class UsersResolver {
+export class UserResolver {
   constructor(
-    private readonly usersService: UsersService, //
+    private readonly userService: UserService, //
   ) {}
 
   @Mutation(() => User)
@@ -16,6 +16,6 @@ export class UsersResolver {
     @Args('name') name: string,
     @Args({ name: 'age', type: () => Int }) age: number,
   ): Promise<User> {
-    return this.usersService.create({ email, password, name, age });
+    return this.userService.create({ email, password, name, age });
   }
 }

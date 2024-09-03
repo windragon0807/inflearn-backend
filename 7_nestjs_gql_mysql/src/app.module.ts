@@ -8,9 +8,11 @@ import { BoardModule } from './apis/boards/board.module';
 import { ProductModule } from './apis/products/product.module';
 import { ProductCategoryModule } from './apis/productsCategories/productCategory.module';
 import { UserModule } from './apis/users/user.module';
+import { AuthModule } from './apis/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     BoardModule,
     ProductModule,
     ProductCategoryModule,
