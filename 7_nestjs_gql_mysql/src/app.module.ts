@@ -7,12 +7,14 @@ import { ConfigModule } from '@nestjs/config';
 import { BoardModule } from './apis/boards/board.module';
 import { ProductModule } from './apis/products/product.module';
 import { ProductCategoryModule } from './apis/productsCategories/productCategory.module';
+import { UserModule } from './apis/users/user.module';
 
 @Module({
   imports: [
     BoardModule,
     ProductModule,
     ProductCategoryModule,
+    UserModule,
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
