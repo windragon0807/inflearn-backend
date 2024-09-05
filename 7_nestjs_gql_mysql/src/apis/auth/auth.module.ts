@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../users/user.module';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
+import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { AuthService } from './auth.service';
     UserModule,
   ],
   providers: [
-    AuthResolver, //
+    JwtAccessStrategy, //
+    AuthResolver,
     AuthService,
   ],
 })

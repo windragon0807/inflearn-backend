@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 import { UserService } from '../users/user.service';
 import { User } from '../users/entities/user.entity';
+import { JWT_SECRET } from 'src/common/constants/auth';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
   getAccessToken({ user }: { user: User }): string {
     return this.jwtService.sign(
       { sub: user.id },
-      { secret: '나의비밀번호', expiresIn: '1h' },
+      { secret: JWT_SECRET, expiresIn: '1h' },
     );
   }
 

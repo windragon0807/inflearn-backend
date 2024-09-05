@@ -1,13 +1,29 @@
-import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
+import { GqlAuthAccessGuard } from '../auth/guards/gql-auth.guard';
+import { IContext } from 'src/common/interfaces/context';
 
 @Resolver()
 export class UserResolver {
   constructor(
     private readonly userService: UserService, //
   ) {}
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => String)
+  fetchUser(
+    @Context() context: IContext, //
+  ): string {
+    // 유저 정보 꺼내오기
+    console.log('================');
+    console.log(context.req.user);
+    console.log('================');
+
+    return '인가에 성공하였습니다.';
+  }
 
   @Mutation(() => User)
   async createUser(
