@@ -1,13 +1,16 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { JWT_KEY, JWT_SECRET } from 'src/common/constants/auth';
+import { STRATEGY_KEY } from 'src/common/constants/auth';
 
 /**
  * PassportStrategy(인가를 처리할 방식, 나만의 인증 방식 이름)
  * - 해당 secret 키가 맞는지 복호화를 시도해보며, 만료기간이 남았는지 등을 확인합니다.
  */
-export class JwtAccessStrategy extends PassportStrategy(Strategy, JWT_KEY) {
+export class JwtAccessStrategy extends PassportStrategy(
+  Strategy,
+  STRATEGY_KEY,
+) {
   constructor() {
     super({
       // 직접 로직을 작성할 수도 있습니다.
@@ -17,7 +20,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, JWT_KEY) {
       //   return accessToken;
       // },
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: JWT_SECRET,
+      secretOrKey: process.env.ACCESSTOKEN_SECRET,
     });
   }
 
