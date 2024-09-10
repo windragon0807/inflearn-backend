@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 import { UserService } from '../users/user.service';
 import { User } from '../users/entities/user.entity';
-import { IContext } from 'src/common/interfaces/context';
+import { IAuthUser, IContext } from 'src/common/interfaces/context';
 
 @Injectable()
 export class AuthService {
@@ -40,6 +40,10 @@ export class AuthService {
     /** refreshToken은 cookie를 통해 받게 되고, accessToken은 payload를 통해 받게 됩니다. */
   }
 
+  restoreAccessToken({ user }: { user: IAuthUser['user'] }): string {
+    return this.getAccessToken({ user });
+  }
+
   setRefreshToken({ user, context }: { user: User; context: IContext }): void {
     const refreshToken = this.jwtService.sign(
       { sub: user.id },
@@ -57,7 +61,7 @@ export class AuthService {
     // context.res.setHeader('Access-Control-Allow-Origin', 'https://myfrontsite.com');
   }
 
-  getAccessToken({ user }: { user: User }): string {
+  getAccessToken({ user }: { user: User | IAuthUser['user'] }): string {
     return this.jwtService.sign(
       { sub: user.id },
       { secret: process.env.ACCESSTOKEN_SECRET, expiresIn: '1h' },

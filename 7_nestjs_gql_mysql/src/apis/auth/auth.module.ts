@@ -5,6 +5,7 @@ import { UserModule } from '../users/user.module';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
   ],
   providers: [
     JwtAccessStrategy, //
+    JwtRefreshStrategy,
     AuthResolver,
     AuthService,
   ],

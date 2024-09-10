@@ -3,8 +3,9 @@ import { UseGuards } from '@nestjs/common';
 
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
-import { GqlAuthAccessGuard } from '../auth/guards/gql-auth.guard';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { IContext } from 'src/common/interfaces/context';
+import { STRATEGY_ACCESSTOKEN_KEY } from 'src/common/constants/auth';
 
 @Resolver()
 export class UserResolver {
@@ -12,7 +13,7 @@ export class UserResolver {
     private readonly userService: UserService, //
   ) {}
 
-  @UseGuards(GqlAuthAccessGuard)
+  @UseGuards(GqlAuthGuard(STRATEGY_ACCESSTOKEN_KEY))
   @Query(() => String)
   fetchUser(
     @Context() context: IContext, //

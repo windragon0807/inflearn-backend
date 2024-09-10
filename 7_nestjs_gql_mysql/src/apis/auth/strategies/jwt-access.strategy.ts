@@ -1,7 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { STRATEGY_KEY } from 'src/common/constants/auth';
+import { STRATEGY_ACCESSTOKEN_KEY } from 'src/common/constants/auth';
 
 /**
  * PassportStrategy(인가를 처리할 방식, 나만의 인증 방식 이름)
@@ -9,7 +9,7 @@ import { STRATEGY_KEY } from 'src/common/constants/auth';
  */
 export class JwtAccessStrategy extends PassportStrategy(
   Strategy,
-  STRATEGY_KEY,
+  STRATEGY_ACCESSTOKEN_KEY,
 ) {
   constructor() {
     super({
