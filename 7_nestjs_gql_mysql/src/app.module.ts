@@ -9,11 +9,13 @@ import { ProductModule } from './apis/products/product.module';
 import { ProductCategoryModule } from './apis/productsCategories/productCategory.module';
 import { UserModule } from './apis/users/user.module';
 import { AuthModule } from './apis/auth/auth.module';
+import { PointsTransactionModule } from './apis/pointsTransactions/pointsTransaction.module';
 
 @Module({
   imports: [
     AuthModule,
     BoardModule,
+    PointsTransactionModule,
     ProductModule,
     ProductCategoryModule,
     UserModule,
