@@ -71,6 +71,7 @@ enum POINT_TRANSACTION_STATUS_ENUM {
 type Query {
   fetchUser: String!
   fetchBoards: [Board!]
+  fetchCache: String!
   fetchProducts: [Product!]!
   fetchProduct(productId: String!): Product!
 }
@@ -80,6 +81,7 @@ type Mutation {
   restoreAccessToken: String!
   createUser(email: String!, password: String!, name: String!, age: Int!): User!
   createBoard(createBoardInput: CreateBoardInput!): String!
+  createCache(createBoardInput: CreateBoardInput!): String!
   uploadFile(file: Upload!): String!
   uploadFiles(files: [Upload!]!): [String!]!
   createPointTransaction(impUid: String!, amount: Int!): PointTransaction!

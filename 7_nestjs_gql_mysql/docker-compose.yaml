@@ -1,8 +1,6 @@
-version: '3.7'
-
 # 컴퓨터들
 services:
-  # 컴퓨터이름
+  # 컴퓨터 이름
   my-backend:
     build:
       context: .
@@ -14,7 +12,7 @@ services:
     env_file:
       - ./.env.docker
 
-  # 컴퓨터이름
+  # 컴퓨터 이름
   my-database:
     # platform: linux/86_64
     image: mysql:latest
@@ -23,3 +21,9 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - 3306:3306
+
+  # 컴퓨터 이름
+  my-redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
