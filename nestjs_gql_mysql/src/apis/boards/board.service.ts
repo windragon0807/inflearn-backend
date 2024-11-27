@@ -45,7 +45,6 @@ export class BoardService {
     console.log(createBoardInput.contents);
 
     // 2. 데이터를 등록하는 로직 => DB에 접속해서 데이터 저장하기
-    //
 
     // 3. DB에 저장이 잘 됐으면, 결과를 브라우저에 응답(response) 주기
     return '게시물 등록에 성공하였습니다!!';

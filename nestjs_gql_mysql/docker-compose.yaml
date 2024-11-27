@@ -14,11 +14,11 @@ services:
 
   # 컴퓨터 이름
   my-database:
-    # platform: linux/86_64
+    # platform: linux/86_64 (맥북 M1 칩 사용자는 추가 설정 필요)
     image: mysql:latest
-    environment:
-      MYSQL_DATABASE: mydocker
-      MYSQL_ROOT_PASSWORD: root
+    environment: # MySQL 설치 시, 초기 셋팅을 위한 곳
+      MYSQL_DATABASE: mydocker # .env.docker 파일의 DATABASE_DATABASE와 동일해야 함
+      MYSQL_ROOT_PASSWORD: root # .env.docker 파일의 DATABASE_PASSWORD와 동일해야 함
     ports:
       - 3306:3306
 

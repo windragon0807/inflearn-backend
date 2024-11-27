@@ -24,9 +24,17 @@ import { FileModule } from './apis/files/file.module';
     ProductModule,
     ProductCategoryModule,
     UserModule,
+
+    /**
+     * .env 사용을 위해 Nest에서 제공하는 ConfigModule을 사용해줍니다.
+     * .env 파일은 모두 string으로 인식됩니다.
+     */
     ConfigModule.forRoot(),
 
-    /** GraphQL */
+    /**
+     * Code First 방식
+     * - 데코레이터와 타입스크립트 클래스를 사용하여 Resolver를 작성하면 자동으로 GraphQL Schema를 생성해줍니다.
+     */
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/graphql/schema.gql',
