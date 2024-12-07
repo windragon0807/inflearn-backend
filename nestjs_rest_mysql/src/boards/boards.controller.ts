@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BoardsService } from './boards.service';
+import { Board } from './entities/boards.entity';
+import { CreateBoardInput } from './dto/create-board.input';
 
 @ApiTags('boards')
 @Controller('/boards')
@@ -21,7 +23,35 @@ export class BoardsController {
     },
   })
   @Get()
-  getHello(): string {
-    return this.boardsService.getHello();
+  fetchBoards(): Board[] {
+    return this.boardsService.findAll();
+  }
+
+  @Post()
+  createBoard(@Body() createBoardInput: CreateBoardInput): string {
+    console.log(createBoardInput);
+    return this.boardsService.create({ createBoardInput });
   }
 }
+
+/**
+ * Get 메서드
+ * - @Param(): 라우팅 파라미터
+ *   @Post('/boards/:boardId')
+ *   createBoard(@Param('boardId') boardId: string)
+ *
+ * - @Query(): 쿼리 파라미터
+ *   @Get('/boards')
+ *   fetchBoards(@Query('page') page: number)
+ */
+
+/**
+ * Mutation 메서드
+ * - @Param(): 라우팅 파라미터
+ *   @Post('/boards/:boardId')
+ *   createBoard(@Param('boardId') boardId: string)
+ *
+ * - @Body(): 전달되는 바디 데이터
+ *   @Post('/boards')
+ *   createBoard(@Body() createBoardInput: CreateBoardInput)
+ */
