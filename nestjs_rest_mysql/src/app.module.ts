@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { BoardsModule } from './boards/boards.module';
-import { Board } from './boards/entities/boards.entity';
+import { BoardsModule } from './apis/boards/boards.module';
+import { Board } from './apis/boards/entities/boards.entity';
 
 @Module({
   imports: [
