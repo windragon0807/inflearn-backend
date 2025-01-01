@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { BoardsModule } from './apis/boards/boards.module';
-import { Board } from './apis/boards/entities/boards.entity';
+import { ProductsModule } from './apis/products/products.module';
 
 @Module({
   imports: [
-    BoardsModule, //
+    BoardsModule,
+    ProductsModule,
 
     /**
      * .env 사용을 위해 Nest에서 제공하는 ConfigModule을 사용해줍니다.
@@ -21,7 +22,7 @@ import { Board } from './apis/boards/entities/boards.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
-      entities: [Board],
+      entities: [__dirname + '/apis/**/*.entity.*'],
       synchronize: true,
       logging: true,
     }),
