@@ -4,30 +4,56 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/products.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
+import { ProductSaleslocationsService } from '../productSaleslocations/productSaleslocations.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
+
+    private readonly productSaleslocationsService: ProductSaleslocationsService,
   ) {}
 
   findAll(): Promise<Product[]> {
-    return this.productsRepository.find();
+    return this.productsRepository.find({
+      relations: ['productSaleslocation'],
+    });
   }
 
   findOne({ productId }: { productId: string }): Promise<Product> {
-    return this.productsRepository.findOne({ where: { id: productId } });
+    return this.productsRepository.findOne({
+      where: { id: productId },
+      relations: ['productSaleslocation'],
+    });
   }
 
-  create({
+  async create({
     createProductInput,
   }: {
     createProductInput: CreateProductInput;
   }): Promise<Product> {
-    return this.productsRepository.save({
-      ...createProductInput,
+    const { productSaleslocation, ...product } = createProductInput;
+
+    /**
+     * 상품거래 위치 등록
+     */
+    /* productsSaleslocation 레포지토리에 직접 접근하지 않고 서비스를 타고 가져오는 이유는 검증을 서비스에서 진행하기 떄문입니다. */
+    const productSaleslocationResult =
+      await this.productSaleslocationsService.create({
+        ...productSaleslocation,
+      });
+
+    /**
+     * Product와 ProductSaleslocation 엔티티 간에 관계가 설정되어 있으면
+     * TypeORM은 자동으로 관련 엔티티의 ID만 참조 컬럼으로 저장합니다.
+     */
+    const productsResult = await this.productsRepository.save({
+      ...product,
+      productSaleslocation: productSaleslocationResult,
     });
+
+    return productsResult;
   }
 
   async update({
