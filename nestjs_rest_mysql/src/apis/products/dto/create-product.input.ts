@@ -10,4 +10,6 @@ export class CreateProductInput {
   price: number;
 
   productSaleslocation: ProductSaleslocationsInput;
+
+  productCategoryId: string;
 }

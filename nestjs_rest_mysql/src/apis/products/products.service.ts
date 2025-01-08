@@ -17,14 +17,14 @@ export class ProductsService {
 
   findAll(): Promise<Product[]> {
     return this.productsRepository.find({
-      relations: ['productSaleslocation'],
+      relations: ['productSaleslocation', 'productCategory'],
     });
   }
 
   findOne({ productId }: { productId: string }): Promise<Product> {
     return this.productsRepository.findOne({
       where: { id: productId },
-      relations: ['productSaleslocation'],
+      relations: ['productSaleslocation', 'productCategory'],
     });
   }
 
@@ -33,7 +33,8 @@ export class ProductsService {
   }: {
     createProductInput: CreateProductInput;
   }): Promise<Product> {
-    const { productSaleslocation, ...product } = createProductInput;
+    const { productSaleslocation, productCategoryId, ...product } =
+      createProductInput;
 
     /**
      * 상품거래 위치 등록
@@ -51,6 +52,9 @@ export class ProductsService {
     const productsResult = await this.productsRepository.save({
       ...product,
       productSaleslocation: productSaleslocationResult,
+      productCategory: {
+        id: productCategoryId,
+      },
     });
 
     return productsResult;
