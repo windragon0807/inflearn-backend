@@ -12,4 +12,6 @@ export class CreateProductInput {
   productSaleslocation: ProductSaleslocationsInput;
 
   productCategoryId: string;
+
+  productTags: string[];
 }

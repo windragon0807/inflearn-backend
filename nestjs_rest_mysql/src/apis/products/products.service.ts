@@ -5,14 +5,15 @@ import { Product } from './entities/products.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { ProductSaleslocationsService } from '../productSaleslocations/productSaleslocations.service';
+import { ProductTagsService } from '../productTags/productTags.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
-
     private readonly productSaleslocationsService: ProductSaleslocationsService,
+    private readonly productTagsService: ProductTagsService,
   ) {}
 
   findAll(): Promise<Product[]> {
@@ -33,7 +34,7 @@ export class ProductsService {
   }: {
     createProductInput: CreateProductInput;
   }): Promise<Product> {
-    const { productSaleslocation, productCategoryId, ...product } =
+    const { productSaleslocation, productCategoryId, productTags, ...product } =
       createProductInput;
 
     /**
@@ -46,6 +47,20 @@ export class ProductsService {
       });
 
     /**
+     * 상품태그 등록
+     */
+    /* productTags가 ["#전자제품", "#영등포", "#컴퓨터"]와 같은 패턴으로 가정 */
+    const tagNames = productTags.map((el) => el.replace('#', ''));
+    const prevTags = await this.productTagsService.findByNames({ tagNames });
+    const temp = [];
+    tagNames.forEach((el) => {
+      const isExist = prevTags.find((prevEl) => el === prevEl.name);
+      if (!isExist) temp.push({ name: el });
+    });
+    const newTags = await this.productTagsService.bulkInsert({ names: temp });
+    const tags = [...prevTags, ...newTags.identifiers];
+
+    /**
      * Product와 ProductSaleslocation 엔티티 간에 관계가 설정되어 있으면
      * TypeORM은 자동으로 관련 엔티티의 ID만 참조 컬럼으로 저장합니다.
      */
@@ -55,6 +70,7 @@ export class ProductsService {
       productCategory: {
         id: productCategoryId,
       },
+      productTags: tags,
     });
 
     return productsResult;
@@ -80,6 +96,7 @@ export class ProductsService {
     return this.productsRepository.save({
       ...product, // 수정 후 수정되지 않은 다른 결과값까지 모두 받고 싶을 때 사용
       ...updateProductInput,
+      productTags: updateProductInput.productTags.map((el) => ({ name: el })),
     });
 
     // this.productRepository.create() // DB 접속이랑 관련 없음. 등록을 위해서 빈 껍데기 객체 만들기 위함
