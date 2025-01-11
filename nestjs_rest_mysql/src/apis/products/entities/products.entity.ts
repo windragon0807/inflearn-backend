@@ -1,7 +1,3 @@
-import { ProductCategory } from 'src/apis/productCategories/entities/productCategories.entity';
-import { ProductSaleslocation } from 'src/apis/productSaleslocations/entities/productSaleslocations.entity';
-import { ProductTag } from 'src/apis/productTags/entities/productTags.entity';
-import { User } from 'src/apis/users/entities/users.entity';
 import {
   Column,
   CreateDateColumn,
@@ -15,6 +11,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProductCategory } from 'src/apis/productCategories/entities/productCategories.entity';
+import { ProductSaleslocation } from 'src/apis/productSaleslocations/entities/productSaleslocations.entity';
+import { ProductTag } from 'src/apis/productTags/entities/productTags.entity';
+import { User } from 'src/apis/users/entities/users.entity';
 
 @Entity()
 export class Product {

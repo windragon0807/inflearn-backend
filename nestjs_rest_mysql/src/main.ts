@@ -8,13 +8,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('NestJS REST API')
+    .setTitle('NestJS API')
     .setDescription('NestJS REST API 문서')
     .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('swagger', app, document);
 
   /* Pipe : 데이터가 오고가는 흐름에 있어서 데이터 검증과 필터링을 해주는 역할 */
   app.useGlobalPipes(new ValidationPipe());

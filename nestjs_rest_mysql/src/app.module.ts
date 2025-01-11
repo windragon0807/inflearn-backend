@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { BoardsModule } from './apis/boards/boards.module';
 import { ProductsModule } from './apis/products/products.module';
 import { ProductCategoriesModule } from './apis/productCategories/productCategories.module';
 
 @Module({
   imports: [
-    BoardsModule,
     ProductsModule,
     ProductCategoriesModule,
 
