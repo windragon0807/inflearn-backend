@@ -11,10 +11,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductCategory } from 'src/apis/productCategories/entities/productCategories.entity';
-import { ProductSaleslocation } from 'src/apis/productSaleslocations/entities/productSaleslocations.entity';
-import { ProductTag } from 'src/apis/productTags/entities/productTags.entity';
-import { User } from 'src/apis/users/entities/users.entity';
+import { ProductCategory } from '@productCategories/entities/productCategories.entity';
+import { ProductSaleslocation } from '@productSaleslocations/entities/productSaleslocations.entity';
+import { ProductTag } from '@productTags/entities/productTags.entity';
+import { User } from '@users/entities/users.entity';
 
 @Entity()
 export class Product {

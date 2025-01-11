@@ -1,5 +1,5 @@
 import { Min } from 'class-validator';
-import { ProductSaleslocationsInput } from 'src/apis/productSaleslocations/dto/create-productSaleslocations.input';
+import { ProductSaleslocationsInput } from '@productSaleslocations/dto/create-productSaleslocations.input';
 
 export class CreateProductInput {
   name: string;

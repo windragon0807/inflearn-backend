@@ -1,5 +1,5 @@
-import { Product } from 'src/apis/products/entities/products.entity';
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from '@products/entities/products.entity';
 
 @Entity()
 export class ProductTag {
