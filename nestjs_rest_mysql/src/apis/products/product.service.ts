@@ -1,29 +1,29 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Product } from './entities/products.entity';
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
-import { ProductSaleslocationsService } from '@productSaleslocations/productSaleslocations.service';
-import { ProductTagsService } from '@productTags/productTags.service';
+import { Product } from './entity/product.entity';
+import { CreateProductInput } from './dto/create.input';
+import { UpdateProductInput } from './dto/update.input';
+import { ProductSaleslocationService } from '@productSaleslocations/productSaleslocation.service';
+import { ProductTagService } from '@productTags/productTag.service';
 
 @Injectable()
-export class ProductsService {
+export class ProductService {
   constructor(
     @InjectRepository(Product)
-    private readonly productsRepository: Repository<Product>,
-    private readonly productSaleslocationsService: ProductSaleslocationsService,
-    private readonly productTagsService: ProductTagsService,
+    private readonly productRepository: Repository<Product>,
+    private readonly productSaleslocationService: ProductSaleslocationService,
+    private readonly productTagService: ProductTagService,
   ) {}
 
   findAll(): Promise<Product[]> {
-    return this.productsRepository.find({
+    return this.productRepository.find({
       relations: ['productSaleslocation', 'productCategory'],
     });
   }
 
   findOne({ productId }: { productId: string }): Promise<Product> {
-    return this.productsRepository.findOne({
+    return this.productRepository.findOne({
       where: { id: productId },
       relations: ['productSaleslocation', 'productCategory'],
     });
@@ -42,7 +42,7 @@ export class ProductsService {
      */
     /* productsSaleslocation 레포지토리에 직접 접근하지 않고 서비스를 타고 가져오는 이유는 검증을 서비스에서 진행하기 떄문입니다. */
     const productSaleslocationResult =
-      await this.productSaleslocationsService.create({
+      await this.productSaleslocationService.create({
         ...productSaleslocation,
       });
 
@@ -51,20 +51,20 @@ export class ProductsService {
      */
     /* productTags가 ["#전자제품", "#영등포", "#컴퓨터"]와 같은 패턴으로 가정 */
     const tagNames = productTags.map((el) => el.replace('#', ''));
-    const prevTags = await this.productTagsService.findByNames({ tagNames });
+    const prevTags = await this.productTagService.findByNames({ tagNames });
     const temp = [];
     tagNames.forEach((el) => {
       const isExist = prevTags.find((prevEl) => el === prevEl.name);
       if (!isExist) temp.push({ name: el });
     });
-    const newTags = await this.productTagsService.bulkInsert({ names: temp });
+    const newTags = await this.productTagService.bulkInsert({ names: temp });
     const tags = [...prevTags, ...newTags.identifiers];
 
     /**
      * Product와 ProductSaleslocation 엔티티 간에 관계가 설정되어 있으면
      * TypeORM은 자동으로 관련 엔티티의 ID만 참조 컬럼으로 저장합니다.
      */
-    const productsResult = await this.productsRepository.save({
+    const productsResult = await this.productRepository.save({
       ...product,
       productSaleslocation: productSaleslocationResult,
       productCategory: {
@@ -93,7 +93,7 @@ export class ProductsService {
      * save()는 데이터를 수정(생성)하고, 수정(생성)된 데이터를 반환한다.
      * save()의 반환 요소는 `entity`에 할당한 요소에 한정된다. (...product 추가 이유)
      */
-    return this.productsRepository.save({
+    return this.productRepository.save({
       ...product, // 수정 후 수정되지 않은 다른 결과값까지 모두 받고 싶을 때 사용
       ...updateProductInput,
       productTags: updateProductInput.productTags.map((el) => ({ name: el })),
@@ -141,7 +141,7 @@ export class ProductsService {
      * 장점: 다른 컬럼으로도 삭제 가능
      * 단점: 여러 `id`를 한 번에 삭제 불가능
      */
-    const result = await this.productsRepository.softDelete({ id: productId });
+    const result = await this.productRepository.softDelete({ id: productId });
     return result.affected ? true : false;
   }
 }

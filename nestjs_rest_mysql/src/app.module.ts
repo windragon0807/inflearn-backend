@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { ProductsModule } from '@products/products.module';
-import { ProductCategoriesModule } from '@productCategories/productCategories.module';
+import { ProductModule } from '@products/product.module';
+import { ProductCategoryModule } from '@productCategories/productCategory.module';
 
 @Module({
   imports: [
-    ProductsModule,
-    ProductCategoriesModule,
+    ProductModule,
+    ProductCategoryModule,
 
     /**
      * .env 사용을 위해 Nest에서 제공하는 ConfigModule을 사용해줍니다.

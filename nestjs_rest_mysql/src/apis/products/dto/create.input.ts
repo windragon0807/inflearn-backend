@@ -1,5 +1,5 @@
 import { Min } from 'class-validator';
-import { ProductSaleslocationsInput } from '@productSaleslocations/dto/create-productSaleslocations.input';
+import { ProductSaleslocationInput } from '@productSaleslocations/dto/create.input';
 
 export class CreateProductInput {
   name: string;
@@ -9,7 +9,7 @@ export class CreateProductInput {
   @Min(0)
   price: number;
 
-  productSaleslocation: ProductSaleslocationsInput;
+  productSaleslocation: ProductSaleslocationInput;
 
   productCategoryId: string;
 

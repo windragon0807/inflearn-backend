@@ -11,10 +11,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductCategory } from '@productCategories/entities/productCategories.entity';
-import { ProductSaleslocation } from '@productSaleslocations/entities/productSaleslocations.entity';
-import { ProductTag } from '@productTags/entities/productTags.entity';
-import { User } from '@users/entities/users.entity';
+import { ProductCategory } from '@productCategories/entity/productCategory.entity';
+import { ProductSaleslocation } from '@productSaleslocations/entity/productSaleslocation.entity';
+import { ProductTag } from '@productTags/entity/productTag.entity';
+import { User } from '@users/entity/user.entity';
 
 @Entity()
 export class Product {
@@ -50,9 +50,6 @@ export class Product {
   @ManyToOne(() => ProductCategory)
   productCategory: ProductCategory;
 
-  @ManyToOne(() => User)
-  user: User;
-
   /**
    * - @JoinTable() : N : M 관계에서 생성되는 중간 테이블을 자동으로 만들어 주는 것으로 기준이 되는 테이블 한 쪽에만 작성해주면 됩니다.
    * - (productTags) => productTags.products : productTags 입장에서의 products 와의 관계를 명시해 준 것으로, N : M 관계에서는 두 테이블 모두 관계를 나타내주어야 합니다
@@ -61,6 +58,9 @@ export class Product {
   @JoinTable()
   @ManyToMany(() => ProductTag, (productTags) => productTags.products)
   productTags: ProductTag[];
+
+  @ManyToOne(() => User)
+  user: User;
 
   /** 데이터 등록 시간 자동으로 기록 */
   @CreateDateColumn()

@@ -8,21 +8,21 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
-import { CreateProductInput } from './dto/create-product.input';
-import { Product } from './entities/products.entity';
-import { ProductsService } from './products.service';
-import { UpdateProductInput } from './dto/update-product.input';
+import { CreateProductInput } from './dto/create.input';
+import { Product } from './entity/product.entity';
+import { ProductService } from './product.service';
+import { UpdateProductInput } from './dto/update.input';
 
-@ApiTags('products')
-@Controller('/products')
-export class ProductsController {
+@ApiTags('product')
+@Controller('/product')
+export class ProductController {
   constructor(
-    private readonly productsService: ProductsService, //
+    private readonly productService: ProductService, //
   ) {}
 
   @Get()
   fetchProducts(): Promise<Product[]> {
-    return this.productsService.findAll();
+    return this.productService.findAll();
   }
 
   @ApiOperation({
@@ -59,7 +59,7 @@ export class ProductsController {
   })
   @Get('/:productId')
   fetchProduct(@Param('productId') productId: string): Promise<Product> {
-    return this.productsService.findOne({ productId });
+    return this.productService.findOne({ productId });
   }
 
   @ApiOperation({
@@ -88,7 +88,7 @@ export class ProductsController {
   createProduct(
     @Body() createProductInput: CreateProductInput,
   ): Promise<Product> {
-    return this.productsService.create({ createProductInput });
+    return this.productService.create({ createProductInput });
   }
 
   @Patch('/:productId')
@@ -96,11 +96,11 @@ export class ProductsController {
     @Param('productId') productId: string,
     @Body() updateProductInput: UpdateProductInput,
   ): Promise<Product> {
-    return this.productsService.update({ productId, updateProductInput });
+    return this.productService.update({ productId, updateProductInput });
   }
 
   @Delete('/:productId')
   deleteProduct(@Param('productId') productId: string): Promise<boolean> {
-    return this.productsService.delete({ productId });
+    return this.productService.delete({ productId });
   }
 }
