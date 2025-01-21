@@ -10,4 +10,13 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  age: number;
+
+  @Column({ default: 0 })
+  point: number;
 }

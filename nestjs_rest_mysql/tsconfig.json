@@ -20,6 +20,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@apis/*": ["src/apis/*"],
+      "@common/*": ["src/common/*"],
       "@products/*": ["src/apis/products/*"],
       "@productCategories/*": ["src/apis/productCategories/*"],
       "@productSaleslocations/*": ["src/apis/productSaleslocations/*"],

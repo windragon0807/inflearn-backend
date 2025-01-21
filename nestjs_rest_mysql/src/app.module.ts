@@ -3,9 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from '@products/product.module';
 import { ProductCategoryModule } from '@productCategories/productCategory.module';
+import { UserModule } from './apis/users/user.module';
+import { AuthModule } from './apis/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
     ProductModule,
     ProductCategoryModule,
 
